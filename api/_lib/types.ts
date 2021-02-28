@@ -6,5 +6,6 @@ export interface ParsedRequest {
     text: string;
     md: boolean;
     fontSize: string;
+    fontColor? : string;
     background?: string;
 }

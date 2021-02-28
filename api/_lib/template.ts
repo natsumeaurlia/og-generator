@@ -11,8 +11,8 @@ const rglr = readFileSync(`${__dirname}/../_fonts/Inter-Regular.woff2`).toString
 const bold = readFileSync(`${__dirname}/../_fonts/Inter-Bold.woff2`).toString('base64');
 const mono = readFileSync(`${__dirname}/../_fonts/Vera-Mono.woff2`).toString('base64');
 
-function getCss(fontSize: string, background?: string) {
-    let foreground = 'black';
+function getCss(fontSize: string, background?: string, fontColor?: string) {
+    const color = fontColor || 'black';
 
     return `
     @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP&display=swap');
@@ -95,20 +95,20 @@ function getCss(fontSize: string, background?: string) {
         font-family: 'Noto Serif JP', 'Inter', sans-serif;
         font-size: ${sanitizeHtml(fontSize)};
         font-style: normal;
-        color: ${foreground};
+        color: ${color};
         line-height: 1.8;
     }`;
 }
 
 export function getHtml(parsedReq: ParsedRequest) {
-    const { text, md, fontSize, background } = parsedReq;
+    const { text, md, fontSize, background, fontColor } = parsedReq;
     return `<!DOCTYPE html>
 <html>
     <meta charset="utf-8">
     <title>Generated Image</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-        ${getCss(fontSize, background)}
+        ${getCss(fontSize, background, fontColor)}
     </style>
     <body>
         <div>

@@ -57,18 +57,19 @@ const Dropdown = ({ options, value, onchange, small }: DropdownProps) => {
     );
 }
 
-interface TextInputProps {
+interface InputProps {
+    type?: string;
     value: string;
     oninput: (val: string) => void;
 }
 
-const TextInput = ({ value, oninput }: TextInputProps) => {
+const Input = ({ type, value, oninput }: InputProps) => {
     return H('div',
         { className: 'input-outer-wrapper' },
         H('div',
             { className: 'input-inner-wrapper' },
             H('input',
-                { type: 'text', value, oninput: (e: any) => oninput(e.target.value) }
+                { type: type || 'text', value, oninput: (e: any) => oninput(e.target.value) }
             )
         )
     );
@@ -82,8 +83,8 @@ interface FieldProps {
 const Field = ({ label, input }: FieldProps) => {
     return H('div',
         { className: 'field' },
-        H('label', 
-            H('div', {className: 'field-label'}, label),
+        H('label',
+            H('div', { className: 'field-label' }, label),
             H('div', { className: 'field-value' }, input),
         ),
     );
@@ -95,7 +96,7 @@ interface ToastProps {
 }
 
 const Toast = ({ show, message }: ToastProps) => {
-    const style = { transform:  show ? 'translate3d(0,-0px,-0px) scale(1)' : '' };
+    const style = { transform: show ? 'translate3d(0,-0px,-0px) scale(1)' : '' };
     return H('div',
         { className: 'toast-area' },
         H('div',
@@ -103,7 +104,7 @@ const Toast = ({ show, message }: ToastProps) => {
             H('div',
                 { className: 'toast-inner' },
                 H('div',
-                    { className: 'toast-message'},
+                    { className: 'toast-message' },
                     message
                 )
             )
@@ -151,6 +152,7 @@ const App = (_: any, state: AppState, setState: SetState) => {
     const {
         fileType = 'png',
         fontSize = '100px',
+        fontColor = 'black',
         md = true,
         text = '自動でOGを生成',
         showToast = false,
@@ -164,9 +166,8 @@ const App = (_: any, state: AppState, setState: SetState) => {
     url.pathname = `${encodeURIComponent(text)}.${fileType}`;
     url.searchParams.append('md', mdValue);
     url.searchParams.append('fontSize', fontSize);
-    if (background) {
-        url.searchParams.append('background', background)
-    }
+    url.searchParams.append('background', background)
+    url.searchParams.append('fontColor', fontColor)
 
     return H('div',
         { className: 'split' },
@@ -190,6 +191,13 @@ const App = (_: any, state: AppState, setState: SetState) => {
                     })
                 }),
                 H(Field, {
+                    label: 'フォントカラー',
+                    input: H(Input, {
+                        value: fontColor,
+                        oninput: (val: string) => setLoadingState({ fontColor: val })
+                    })
+                }),
+                H(Field, {
                     label: 'テキスト形式',
                     input: H(Dropdown, {
                         options: markdownOptions,
@@ -199,7 +207,7 @@ const App = (_: any, state: AppState, setState: SetState) => {
                 }),
                 H(Field, {
                     label: 'テキストを入力',
-                    input: H(TextInput, {
+                    input: H(Input, {
                         value: text,
                         oninput: (val: string) => {
                             console.log('oninput ' + val);
@@ -209,11 +217,11 @@ const App = (_: any, state: AppState, setState: SetState) => {
                 }),
                 H(Field, {
                     label: '背景画像URL',
-                    input: H(TextInput, {
+                    input: H(Input, {
                         value: background,
                         oninput: (val: string) => setLoadingState({ background: val })
                     })
-                })
+                }),
             )
         ),
         H('div',

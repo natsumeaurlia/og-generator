@@ -152,17 +152,21 @@ const App = (_: any, state: AppState, setState: SetState) => {
         fileType = 'png',
         fontSize = '100px',
         md = true,
-        text = '**Hello** World',
+        text = '自動でOGを生成',
         showToast = false,
         messageToast = '',
         loading = true,
         overrideUrl = null,
+        background = ''
     } = state;
     const mdValue = md ? '1' : '0';
     const url = new URL(window.location.origin);
     url.pathname = `${encodeURIComponent(text)}.${fileType}`;
     url.searchParams.append('md', mdValue);
     url.searchParams.append('fontSize', fontSize);
+    if (background) {
+        url.searchParams.append('background', background)
+    }
 
     return H('div',
         { className: 'split' },
@@ -203,6 +207,13 @@ const App = (_: any, state: AppState, setState: SetState) => {
                         }
                     })
                 }),
+                H(Field, {
+                    label: '背景画像URL',
+                    input: H(TextInput, {
+                        value: background,
+                        oninput: (val: string) => setLoadingState({ background: val })
+                    })
+                })
             )
         ),
         H('div',

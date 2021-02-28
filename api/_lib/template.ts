@@ -11,10 +11,8 @@ const rglr = readFileSync(`${__dirname}/../_fonts/Inter-Regular.woff2`).toString
 const bold = readFileSync(`${__dirname}/../_fonts/Inter-Bold.woff2`).toString('base64');
 const mono = readFileSync(`${__dirname}/../_fonts/Vera-Mono.woff2`).toString('base64');
 
-function getCss(fontSize: string) {
-    let background = 'white';
+function getCss(fontSize: string, background?: string) {
     let foreground = 'black';
-    let radial = 'lightgray';
 
     return `
     @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP&display=swap');
@@ -41,9 +39,11 @@ function getCss(fontSize: string) {
       }
 
     body {
-        background: ${background};
-        background-image: radial-gradient(circle at 25px 25px, ${radial} 2%, transparent 0%), radial-gradient(circle at 75px 75px, ${radial} 2%, transparent 0%);
-        background-size: 100px 100px;
+         ${background ? `
+        background-image: url('${background}');
+        background-position: center;
+        background-size: cover;
+        ` : ``}
         height: 100vh;
         display: flex;
         text-align: center;
@@ -101,14 +101,14 @@ function getCss(fontSize: string) {
 }
 
 export function getHtml(parsedReq: ParsedRequest) {
-    const { text, md, fontSize } = parsedReq;
+    const { text, md, fontSize, background } = parsedReq;
     return `<!DOCTYPE html>
 <html>
     <meta charset="utf-8">
     <title>Generated Image</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-        ${getCss(fontSize)}
+        ${getCss(fontSize, background)}
     </style>
     <body>
         <div>

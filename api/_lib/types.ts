@@ -6,11 +6,8 @@ export interface ParsedRequest {
     text: string;
     md: boolean;
     fontSize: string;
-    fontColor?: string;
+    fontColor? : string;
     background?: string;
-    align: Position;
     images: string[];
     iconSize: string[];
 }
-
-export type Position = 'center' | 'left' | 'right';

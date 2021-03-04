@@ -1,19 +1,22 @@
 import { IncomingMessage } from 'http';
 import { parse } from 'url';
-import { ParsedRequest, Position } from './types';
+import { ParsedRequest } from './types';
 
 export function parseRequest(req: IncomingMessage) {
     console.log('HTTP ' + req.url);
     const { pathname, query } = parse(req.url || '/', true);
     const { fontSize, md, background, fontColor, images, widths, heights} = (query || {});
-    let { align } = (query || {});
 
-    if (Array.isArray(fontSize) || Array.isArray(align) || Array.isArray(fontColor) || Array.isArray(background)) {
+    if (Array.isArray(fontSize)) {
         throw new Error('Expected a single fontSize');
     }
 
-    if (align !== 'center' && align !== 'left' && align !== 'right') {
-        align = 'center';
+    if (Array.isArray(fontColor)) {
+        throw new Error('Expected a single fontColor');
+    }
+
+    if (Array.isArray(background)) {
+        throw new Error('Expected a single background');
     }
 
     const arr = (pathname || '/').slice(1).split('.');
@@ -35,7 +38,6 @@ export function parseRequest(req: IncomingMessage) {
         fontSize: fontSize || '96px',
         background: decodeURIComponent(background),
         fontColor: fontColor,
-        align: align as Position,
         images: getArray(images),
         iconSize: getArray(heights),
     };

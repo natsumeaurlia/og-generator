@@ -2,7 +2,7 @@
 import { readFileSync } from 'fs';
 import marked from 'marked';
 import { sanitizeHtml } from './sanitizer';
-import { ParsedRequest } from './types';
+import { ParsedRequest, Position } from './types';
 const twemoji = require('twemoji');
 const twOptions = { folder: 'svg', ext: '.svg' };
 const emojify = (text: string) => twemoji.parse(text, twOptions);
@@ -11,7 +11,7 @@ const rglr = readFileSync(`${__dirname}/../_fonts/Inter-Regular.woff2`).toString
 const bold = readFileSync(`${__dirname}/../_fonts/Inter-Bold.woff2`).toString('base64');
 const mono = readFileSync(`${__dirname}/../_fonts/Vera-Mono.woff2`).toString('base64');
 
-function getCss(fontSize: string, background?: string, fontColor?: string) {
+function getCss(fontSize: string, align: Position, background?: string, fontColor?: string) {
     const color = fontColor || 'black';
 
     return `
@@ -46,7 +46,7 @@ function getCss(fontSize: string, background?: string, fontColor?: string) {
         ` : ``}
         height: 100vh;
         display: flex;
-        text-align: center;
+        text-align: ${align};
         align-items: center;
         justify-content: center;
     }
@@ -101,14 +101,14 @@ function getCss(fontSize: string, background?: string, fontColor?: string) {
 }
 
 export function getHtml(parsedReq: ParsedRequest) {
-    const { text, md, fontSize, background, fontColor } = parsedReq;
+    const { text, md, fontSize, background, fontColor, align } = parsedReq;
     return `<!DOCTYPE html>
 <html>
     <meta charset="utf-8">
     <title>Generated Image</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-        ${getCss(fontSize, background, fontColor)}
+        ${getCss(fontSize, align, background, fontColor)}
     </style>
     <body>
         <div>

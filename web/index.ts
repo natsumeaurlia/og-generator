@@ -1,4 +1,4 @@
-import { ParsedRequest, Theme, FileType } from '../api/_lib/types';
+import { ParsedRequest, FileType } from '../api/_lib/types';
 const { H, R, copee } = (window as any);
 let timeout = -1;
 
@@ -57,18 +57,19 @@ const Dropdown = ({ options, value, onchange, small }: DropdownProps) => {
     );
 }
 
-interface TextInputProps {
+interface InputProps {
+    type?: string;
     value: string;
     oninput: (val: string) => void;
 }
 
-const TextInput = ({ value, oninput }: TextInputProps) => {
+const Input = ({ type, value, oninput }: InputProps) => {
     return H('div',
         { className: 'input-outer-wrapper' },
         H('div',
             { className: 'input-inner-wrapper' },
             H('input',
-                { type: 'text', value, oninput: (e: any) => oninput(e.target.value) }
+                { type: type || 'text', value, oninput: (e: any) => oninput(e.target.value) }
             )
         )
     );
@@ -91,8 +92,8 @@ interface FieldProps {
 const Field = ({ label, input }: FieldProps) => {
     return H('div',
         { className: 'field' },
-        H('label', 
-            H('div', {className: 'field-label'}, label),
+        H('label',
+            H('div', { className: 'field-label' }, label),
             H('div', { className: 'field-value' }, input),
         ),
     );
@@ -104,7 +105,7 @@ interface ToastProps {
 }
 
 const Toast = ({ show, message }: ToastProps) => {
-    const style = { transform:  show ? 'translate3d(0,-0px,-0px) scale(1)' : '' };
+    const style = { transform: show ? 'translate3d(0,-0px,-0px) scale(1)' : '' };
     return H('div',
         { className: 'toast-area' },
         H('div',
@@ -112,18 +113,13 @@ const Toast = ({ show, message }: ToastProps) => {
             H('div',
                 { className: 'toast-inner' },
                 H('div',
-                    { className: 'toast-message'},
+                    { className: 'toast-message' },
                     message
                 )
             )
         ),
     );
 }
-
-const themeOptions: DropdownOption[] = [
-    { text: 'Light', value: 'light' },
-    { text: 'Dark', value: 'dark' },
-];
 
 const fileTypeOptions: DropdownOption[] = [
     { text: 'PNG', value: 'png' },
@@ -141,31 +137,7 @@ const markdownOptions: DropdownOption[] = [
     { text: 'Markdown', value: '1' },
 ];
 
-const imageLightOptions: DropdownOption[] = [
-    { text: 'Vercel', value: 'https://assets.vercel.com/image/upload/front/assets/design/vercel-triangle-black.svg' },
-    { text: 'Next.js', value: 'https://assets.vercel.com/image/upload/front/assets/design/nextjs-black-logo.svg' },
-    { text: 'Hyper', value: 'https://assets.vercel.com/image/upload/front/assets/design/hyper-color-logo.svg' },
-];
-
-const imageDarkOptions: DropdownOption[] = [
-
-    { text: 'Vercel', value: 'https://assets.vercel.com/image/upload/front/assets/design/vercel-triangle-white.svg' },
-    { text: 'Next.js', value: 'https://assets.vercel.com/image/upload/front/assets/design/nextjs-white-logo.svg' },
-    { text: 'Hyper', value: 'https://assets.vercel.com/image/upload/front/assets/design/hyper-bw-logo.svg' },
-];
-
-const widthOptions = [
-    { text: 'width', value: 'auto' },
-    { text: '50', value: '50' },
-    { text: '100', value: '100' },
-    { text: '150', value: '150' },
-    { text: '200', value: '200' },
-    { text: '250', value: '250' },
-    { text: '300', value: '300' },
-    { text: '350', value: '350' },
-];
-
-const heightOptions = [
+const iconSizeOptions = [
     { text: 'height', value: 'auto' },
     { text: '50', value: '50' },
     { text: '100', value: '100' },
@@ -180,9 +152,8 @@ interface AppState extends ParsedRequest {
     loading: boolean;
     showToast: boolean;
     messageToast: string;
-    selectedImageIndex: number;
     widths: string[];
-    heights: string[];
+    iconSize: string[];
     overrideUrl: URL | null;
 }
 
@@ -203,33 +174,33 @@ const App = (_: any, state: AppState, setState: SetState) => {
     const {
         fileType = 'png',
         fontSize = '100px',
-        theme = 'light',
+        fontColor = 'black',
+        text = '自動でOGを生成',
         md = true,
-        text = '**Hello** World',
-        images=[imageLightOptions[0].value],
+        images=[],
         widths=[],
-        heights=[],
+        iconSize=[],
         showToast = false,
         messageToast = '',
         loading = true,
-        selectedImageIndex = 0,
         overrideUrl = null,
+        background = ''
     } = state;
     const mdValue = md ? '1' : '0';
-    const imageOptions = theme === 'light' ? imageLightOptions : imageDarkOptions;
     const url = new URL(window.location.origin);
     url.pathname = `${encodeURIComponent(text)}.${fileType}`;
-    url.searchParams.append('theme', theme);
     url.searchParams.append('md', mdValue);
     url.searchParams.append('fontSize', fontSize);
+    url.searchParams.append('background', background)
+    url.searchParams.append('fontColor', fontColor)
     for (let image of images) {
         url.searchParams.append('images', image);
     }
     for (let width of widths) {
         url.searchParams.append('widths', width);
     }
-    for (let height of heights) {
-        url.searchParams.append('heights', height);
+    for (let height of iconSize) {
+        url.searchParams.append('iconSize', height);
     }
 
     return H('div',
@@ -238,20 +209,7 @@ const App = (_: any, state: AppState, setState: SetState) => {
             { className: 'pull-left' },
             H('div',
                 H(Field, {
-                    label: 'Theme',
-                    input: H(Dropdown, {
-                        options: themeOptions,
-                        value: theme,
-                        onchange: (val: Theme) => {
-                            const options = val === 'light' ? imageLightOptions : imageDarkOptions
-                            let clone = [...images];
-                            clone[0] = options[selectedImageIndex].value;
-                            setLoadingState({ theme: val, images: clone });
-                        }
-                    })
-                }),
-                H(Field, {
-                    label: 'File Type',
+                    label: 'ファイルタイプ',
                     input: H(Dropdown, {
                         options: fileTypeOptions,
                         value: fileType,
@@ -259,7 +217,7 @@ const App = (_: any, state: AppState, setState: SetState) => {
                     })
                 }),
                 H(Field, {
-                    label: 'Font Size',
+                    label: 'フォントサイズ',
                     input: H(Dropdown, {
                         options: fontSizeOptions,
                         value: fontSize,
@@ -267,7 +225,14 @@ const App = (_: any, state: AppState, setState: SetState) => {
                     })
                 }),
                 H(Field, {
-                    label: 'Text Type',
+                    label: 'フォントカラー',
+                    input: H(Input, {
+                        value: fontColor,
+                        oninput: (val: string) => setLoadingState({ fontColor: val })
+                    })
+                }),
+                H(Field, {
+                    label: 'テキスト形式',
                     input: H(Dropdown, {
                         options: markdownOptions,
                         value: mdValue,
@@ -275,8 +240,8 @@ const App = (_: any, state: AppState, setState: SetState) => {
                     })
                 }),
                 H(Field, {
-                    label: 'Text Input',
-                    input: H(TextInput, {
+                    label: 'テキストを入力',
+                    input: H(Input, {
                         value: text,
                         oninput: (val: string) => {
                             console.log('oninput ' + val);
@@ -285,88 +250,49 @@ const App = (_: any, state: AppState, setState: SetState) => {
                     })
                 }),
                 H(Field, {
-                    label: 'Image 1',
-                    input: H('div',
-                        H(Dropdown, {
-                            options: imageOptions,
-                            value: imageOptions[selectedImageIndex].value,
-                            onchange: (val: string) =>  {
-                                let clone = [...images];
-                                clone[0] = val;
-                                const selected = imageOptions.map(o => o.value).indexOf(val);
-                                setLoadingState({ images: clone, selectedImageIndex: selected });
-                            }
-                        }),
-                        H('div',
-                            { className: 'field-flex' },
-                            H(Dropdown, {
-                                options: widthOptions,
-                                value: widths[0],
-                                small: true,
-                                onchange: (val: string) =>  {
-                                    let clone = [...widths];
-                                    clone[0] = val;
-                                    setLoadingState({ widths: clone });
-                                }
-                            }),
-                            H(Dropdown, {
-                                options: heightOptions,
-                                value: heights[0],
-                                small: true,
-                                onchange: (val: string) =>  {
-                                    let clone = [...heights];
-                                    clone[0] = val;
-                                    setLoadingState({ heights: clone });
-                                }
-                            })
-                        )
-                    ),
+                    label: '背景画像URL',
+                    input: H(Input, {
+                        value: background,
+                        oninput: (val: string) => setLoadingState({ background: val })
+                    })
                 }),
-                ...images.slice(1).map((image, i) => H(Field, {
-                    label: `Image ${i + 2}`,
+                ...images.map((image, i) => H(Field, {
+                    label: `Image ${i + 1}`,
                     input: H('div',
-                        H(TextInput, {
+                        H(Input, {
                             value: image,
                             oninput: (val: string) => {
+                                if (!val.trim()) {
+                                    return
+                                }
                                 let clone = [...images];
-                                clone[i + 1] = val;
-                                setLoadingState({ images: clone, overrideUrl: url });
+                                clone[i] = val;
+                                setLoadingState({ images: clone });
                             }
                         }),
                         H('div',
                             { className: 'field-flex' },
                             H(Dropdown, {
-                                options: widthOptions,
-                                value: widths[i + 1],
+                                options: iconSizeOptions,
+                                value: iconSize[i],
                                 small: true,
                                 onchange: (val: string) =>  {
-                                    let clone = [...widths];
-                                    clone[i + 1] = val;
-                                    setLoadingState({ widths: clone });
-                                }
-                            }),
-                            H(Dropdown, {
-                                options: heightOptions,
-                                value: heights[i + 1],
-                                small: true,
-                                onchange: (val: string) =>  {
-                                    let clone = [...heights];
-                                    clone[i + 1] = val;
-                                    setLoadingState({ heights: clone });
+                                    let clone = [...iconSize];
+                                    clone[i] = val;
+                                    setLoadingState({ iconSize: clone });
                                 }
                             })
                         ),
                         H('div',
                             { className: 'field-flex' },
                             H(Button, {
-                                label: `Remove Image ${i + 2}`,
+                                label: `Remove Image ${i + 1}`,
                                 onclick: (e: MouseEvent) => {
                                     e.preventDefault();
-                                    const filter = (arr: any[]) => [...arr].filter((_, n) => n !== i + 1);
+                                    const filter = (arr: any[]) => [...arr].filter((_, n) => n !== i);
                                     const imagesClone = filter(images);
-                                    const widthsClone = filter(widths);
-                                    const heightsClone = filter(heights);
-                                    setLoadingState({ images: imagesClone, widths: widthsClone, heights: heightsClone });
+                                    const iconSizeClone = filter(iconSize);
+                                    setLoadingState({ images: imagesClone, iconSize: iconSizeClone });
                                 }
                             })
                         )
@@ -377,10 +303,8 @@ const App = (_: any, state: AppState, setState: SetState) => {
                     input: H(Button, {
                         label: `Add Image ${images.length + 1}`,
                         onclick: () => {
-                            const nextImage = images.length === 1
-                                ? 'https://cdn.jsdelivr.net/gh/remojansen/logo.ts@master/ts.svg'
-                                : '';
-                            setLoadingState({ images: [...images, nextImage] })
+                            const nextImage = '';
+                            setState({ images: [...images, nextImage] })
                         }
                     }),
                 }),

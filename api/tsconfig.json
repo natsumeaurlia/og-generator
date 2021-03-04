@@ -9,9 +9,9 @@
         "strict": true,
         "noFallthroughCasesInSwitch": true,
         "noImplicitReturns": true,
-        "noEmitOnError": true,
-        "noUnusedLocals": true,
-        "noUnusedParameters": true,
+        "noEmitOnError": false,
+        "noUnusedLocals": false,
+        "noUnusedParameters": false,
         "removeComments": true,
         "preserveConstEnums": true,
         "esModuleInterop": true

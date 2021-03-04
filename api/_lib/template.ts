@@ -78,10 +78,7 @@ function getCss(fontSize: string, align: Position, background?: string, fontColo
         color: #BBB;
         font-family: Times New Roman, Verdana;
         font-size: 100px;
-    }
-
-    .spacer {
-        margin: 150px;
+        margin: 0 3rem;
     }
 
     .emoji {
@@ -101,7 +98,7 @@ function getCss(fontSize: string, align: Position, background?: string, fontColo
 }
 
 export function getHtml(parsedReq: ParsedRequest) {
-    const { text, md, fontSize, background, fontColor, align, images, widths, heights } = parsedReq;
+    const { text, md, fontSize, background, fontColor, align, images, iconSize } = parsedReq;
     return `<!DOCTYPE html>
 <html>
     <meta charset="utf-8">
@@ -112,30 +109,23 @@ export function getHtml(parsedReq: ParsedRequest) {
     </style>
     <body>
         <div>
-            <div class="spacer">
             <div class="logo-wrapper">
-                ${images.map((img, i) =>
-                    getPlusSign(i) + getImage(img, widths[i], heights[i])
+                ${images.map((val, i) =>
+                    getPlusSign(i) + getIcon(val, iconSize[i])
                 ).join('')}
             </div>
-            <div class="spacer">
             <div class="heading">${emojify(
                 md ? marked(text) : sanitizeHtml(text)
             )}
             </div>
         </div>
+        <script src="https://code.iconify.design/1/1.0.7/iconify.min.js"></script>
     </body>
 </html>`;
 }
 
-function getImage(src: string, width ='auto', height = '225') {
-    return `<img
-        class="logo"
-        alt="Generated Image"
-        src="${sanitizeHtml(src)}"
-        width="${sanitizeHtml(width)}"
-        height="${sanitizeHtml(height)}"
-    />`
+function getIcon(iconName: string, font = '150', inline = false) {
+    return `<span class="iconify" data-icon="${iconName}" data-inline="${inline}" style="font-size:${font}"></span>`
 }
 
 function getPlusSign(i: number) {

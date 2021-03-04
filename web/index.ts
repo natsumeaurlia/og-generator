@@ -137,18 +137,7 @@ const markdownOptions: DropdownOption[] = [
     { text: 'Markdown', value: '1' },
 ];
 
-const widthOptions = [
-    { text: 'width', value: 'auto' },
-    { text: '50', value: '50' },
-    { text: '100', value: '100' },
-    { text: '150', value: '150' },
-    { text: '200', value: '200' },
-    { text: '250', value: '250' },
-    { text: '300', value: '300' },
-    { text: '350', value: '350' },
-];
-
-const heightOptions = [
+const iconSizeOptions = [
     { text: 'height', value: 'auto' },
     { text: '50', value: '50' },
     { text: '100', value: '100' },
@@ -164,7 +153,7 @@ interface AppState extends ParsedRequest {
     showToast: boolean;
     messageToast: string;
     widths: string[];
-    heights: string[];
+    iconSize: string[];
     overrideUrl: URL | null;
 }
 
@@ -190,7 +179,7 @@ const App = (_: any, state: AppState, setState: SetState) => {
         md = true,
         images=[],
         widths=[],
-        heights=[],
+        iconSize=[],
         showToast = false,
         messageToast = '',
         loading = true,
@@ -210,8 +199,8 @@ const App = (_: any, state: AppState, setState: SetState) => {
     for (let width of widths) {
         url.searchParams.append('widths', width);
     }
-    for (let height of heights) {
-        url.searchParams.append('heights', height);
+    for (let height of iconSize) {
+        url.searchParams.append('iconSize', height);
     }
 
     return H('div',
@@ -284,23 +273,13 @@ const App = (_: any, state: AppState, setState: SetState) => {
                         H('div',
                             { className: 'field-flex' },
                             H(Dropdown, {
-                                options: widthOptions,
-                                value: widths[i],
+                                options: iconSizeOptions,
+                                value: iconSize[i],
                                 small: true,
                                 onchange: (val: string) =>  {
-                                    let clone = [...widths];
+                                    let clone = [...iconSize];
                                     clone[i] = val;
-                                    setLoadingState({ widths: clone });
-                                }
-                            }),
-                            H(Dropdown, {
-                                options: heightOptions,
-                                value: heights[i],
-                                small: true,
-                                onchange: (val: string) =>  {
-                                    let clone = [...heights];
-                                    clone[i] = val;
-                                    setLoadingState({ heights: clone });
+                                    setLoadingState({ iconSize: clone });
                                 }
                             })
                         ),
@@ -312,9 +291,8 @@ const App = (_: any, state: AppState, setState: SetState) => {
                                     e.preventDefault();
                                     const filter = (arr: any[]) => [...arr].filter((_, n) => n !== i);
                                     const imagesClone = filter(images);
-                                    const widthsClone = filter(widths);
-                                    const heightsClone = filter(heights);
-                                    setLoadingState({ images: imagesClone, widths: widthsClone, heights: heightsClone });
+                                    const iconSizeClone = filter(iconSize);
+                                    setLoadingState({ images: imagesClone, iconSize: iconSizeClone });
                                 }
                             })
                         )

@@ -37,8 +37,7 @@ export function parseRequest(req: IncomingMessage) {
         fontColor: fontColor,
         align: align as Position,
         images: getArray(images),
-        widths: getArray(widths),
-        heights: getArray(heights),
+        iconSize: getArray(heights),
     };
     return parsedRequest;
 }

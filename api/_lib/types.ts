@@ -10,8 +10,7 @@ export interface ParsedRequest {
     background?: string;
     align: Position;
     images: string[];
-    widths: string[];
-    heights: string[];
+    iconSize: string[];
 }
 
 export type Position = 'center' | 'left' | 'right';

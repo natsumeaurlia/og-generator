@@ -177,9 +177,9 @@ const App = (_: any, state: AppState, setState: SetState) => {
         fontColor = 'black',
         text = '自動でOGを生成',
         md = true,
-        images=[],
-        widths=[],
-        iconSize=[],
+        images = [],
+        widths = [],
+        iconSize = [],
         showToast = false,
         messageToast = '',
         loading = true,
@@ -257,7 +257,10 @@ const App = (_: any, state: AppState, setState: SetState) => {
                     })
                 }),
                 ...images.map((image, i) => H(Field, {
-                    label: `Image ${i + 1}`,
+                    label: H('a',
+                        { href: `https://iconify.design/icon-sets/`, target: "_blank" },
+                        `Icon ${i + 1} Choose From iconify`
+                    ),
                     input: H('div',
                         H(Input, {
                             value: image,
@@ -276,7 +279,7 @@ const App = (_: any, state: AppState, setState: SetState) => {
                                 options: iconSizeOptions,
                                 value: iconSize[i],
                                 small: true,
-                                onchange: (val: string) =>  {
+                                onchange: (val: string) => {
                                     let clone = [...iconSize];
                                     clone[i] = val;
                                     setLoadingState({ iconSize: clone });
@@ -299,7 +302,10 @@ const App = (_: any, state: AppState, setState: SetState) => {
                     )
                 })),
                 H(Field, {
-                    label: `Image ${images.length + 1}`,
+                    label: H('a',
+                        { href: `https://iconify.design/icon-sets/`, target: "_blank" },
+                        `Icon ${images.length + 1} Choose From iconify`
+                    ),
                     input: H(Button, {
                         label: `Add Image ${images.length + 1}`,
                         onclick: () => {

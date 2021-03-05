@@ -184,7 +184,8 @@ const App = (_: any, state: AppState, setState: SetState) => {
         messageToast = '',
         loading = true,
         overrideUrl = null,
-        background = ''
+        background = '',
+        fontWeight = 400
     } = state;
     const mdValue = md ? '1' : '0';
     const url = new URL(window.location.origin);
@@ -193,6 +194,7 @@ const App = (_: any, state: AppState, setState: SetState) => {
     url.searchParams.append('fontSize', fontSize);
     url.searchParams.append('background', background)
     url.searchParams.append('fontColor', fontColor)
+    url.searchParams.append('fontWeight', String(fontWeight))
     for (let image of images) {
         url.searchParams.append('images', image);
     }
@@ -229,6 +231,13 @@ const App = (_: any, state: AppState, setState: SetState) => {
                     input: H(Input, {
                         value: fontColor,
                         oninput: (val: string) => setLoadingState({ fontColor: val })
+                    })
+                }),
+                H(Field, {
+                    label: 'フォントウェイト',
+                    input: H(Input, {
+                        value: fontWeight,
+                        oninput: (val: string) => setLoadingState({ fontWeight: val })
                     })
                 }),
                 H(Field, {

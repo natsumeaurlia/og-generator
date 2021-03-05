@@ -5,7 +5,7 @@ import { ParsedRequest } from './types';
 export function parseRequest(req: IncomingMessage) {
     console.log('HTTP ' + req.url);
     const { pathname, query } = parse(req.url || '/', true);
-    const { fontSize, md, background, fontColor, images, iconSize} = (query || {});
+    const { fontSize, fontWeight, md, background, fontColor, images, iconSize } = (query || {});
 
     if (Array.isArray(fontSize)) {
         throw new Error('Expected a single fontSize');
@@ -16,6 +16,10 @@ export function parseRequest(req: IncomingMessage) {
     }
 
     if (Array.isArray(background)) {
+        throw new Error('Expected a single background');
+    }
+
+    if (Array.isArray(fontWeight)) {
         throw new Error('Expected a single background');
     }
 
@@ -40,6 +44,7 @@ export function parseRequest(req: IncomingMessage) {
         fontColor: fontColor,
         images: getArray(images),
         iconSize: getArray(iconSize),
+        fontWeight: fontWeight
     };
     return parsedRequest;
 }

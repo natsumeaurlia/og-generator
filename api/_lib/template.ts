@@ -11,7 +11,7 @@ const rglr = readFileSync(`${__dirname}/../_fonts/Inter-Regular.woff2`).toString
 const bold = readFileSync(`${__dirname}/../_fonts/Inter-Bold.woff2`).toString('base64');
 const mono = readFileSync(`${__dirname}/../_fonts/Vera-Mono.woff2`).toString('base64');
 
-function getCss(fontSize: string, background?: string, fontColor?: string) {
+function getCss(fontSize: string, background?: string, fontColor?: string, fontWeight?: string) {
     const color = fontColor || 'black';
 
     return `
@@ -93,19 +93,22 @@ function getCss(fontSize: string, background?: string, fontColor?: string) {
         font-size: ${sanitizeHtml(fontSize)};
         font-style: normal;
         color: ${color};
-        line-height: 1.8;
+        ${fontWeight ? 
+        `font-weight: ${fontWeight}` :
+        `font-weight: normal`
+        }
     }`;
 }
 
 export function getHtml(parsedReq: ParsedRequest) {
-    const { text, md, fontSize, background, fontColor, images, iconSize } = parsedReq;
+    const { text, md, fontSize, background, fontColor, images, iconSize, fontWeight } = parsedReq;
     return `<!DOCTYPE html>
 <html>
     <meta charset="utf-8">
     <title>Generated Image</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-        ${getCss(fontSize, background, fontColor)}
+        ${getCss(fontSize, background, fontColor, fontWeight)}
     </style>
     <body>
         <div>

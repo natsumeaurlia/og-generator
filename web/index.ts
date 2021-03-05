@@ -177,7 +177,7 @@ const App = (_: any, state: AppState, setState: SetState) => {
         fontColor = 'black',
         text = '自動でOGを生成',
         md = true,
-        images = ['logos:laravel'],
+        images = ['logos-typescript-icon','logos-nodejs'],
         iconSize = [],
         showToast = false,
         messageToast = '',

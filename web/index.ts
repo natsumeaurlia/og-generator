@@ -177,14 +177,15 @@ const App = (_: any, state: AppState, setState: SetState) => {
         fontColor = 'black',
         text = '自動でOGを生成',
         md = true,
-        images=[],
-        widths=[],
-        iconSize=[],
+        images = [],
+        widths = [],
+        iconSize = [],
         showToast = false,
         messageToast = '',
         loading = true,
         overrideUrl = null,
-        background = ''
+        background = '',
+        fontWeight = 400
     } = state;
     const mdValue = md ? '1' : '0';
     const url = new URL(window.location.origin);
@@ -193,14 +194,15 @@ const App = (_: any, state: AppState, setState: SetState) => {
     url.searchParams.append('fontSize', fontSize);
     url.searchParams.append('background', background)
     url.searchParams.append('fontColor', fontColor)
+    url.searchParams.append('fontWeight', String(fontWeight))
     for (let image of images) {
         url.searchParams.append('images', image);
     }
     for (let width of widths) {
         url.searchParams.append('widths', width);
     }
-    for (let height of iconSize) {
-        url.searchParams.append('iconSize', height);
+    for (let size of iconSize) {
+        url.searchParams.append('iconSize', size);
     }
 
     return H('div',
@@ -232,6 +234,13 @@ const App = (_: any, state: AppState, setState: SetState) => {
                     })
                 }),
                 H(Field, {
+                    label: 'フォントウェイト',
+                    input: H(Input, {
+                        value: fontWeight,
+                        oninput: (val: string) => setLoadingState({ fontWeight: val })
+                    })
+                }),
+                H(Field, {
                     label: 'テキスト形式',
                     input: H(Dropdown, {
                         options: markdownOptions,
@@ -257,7 +266,10 @@ const App = (_: any, state: AppState, setState: SetState) => {
                     })
                 }),
                 ...images.map((image, i) => H(Field, {
-                    label: `Image ${i + 1}`,
+                    label: H('a',
+                        { href: `https://iconify.design/icon-sets/`, target: "_blank" },
+                        `Icon ${i + 1} Choose From iconify`
+                    ),
                     input: H('div',
                         H(Input, {
                             value: image,
@@ -276,7 +288,7 @@ const App = (_: any, state: AppState, setState: SetState) => {
                                 options: iconSizeOptions,
                                 value: iconSize[i],
                                 small: true,
-                                onchange: (val: string) =>  {
+                                onchange: (val: string) => {
                                     let clone = [...iconSize];
                                     clone[i] = val;
                                     setLoadingState({ iconSize: clone });
@@ -299,7 +311,10 @@ const App = (_: any, state: AppState, setState: SetState) => {
                     )
                 })),
                 H(Field, {
-                    label: `Image ${images.length + 1}`,
+                    label: H('a',
+                        { href: `https://iconify.design/icon-sets/`, target: "_blank" },
+                        `Icon ${images.length + 1} Choose From iconify`
+                    ),
                     input: H(Button, {
                         label: `Add Image ${images.length + 1}`,
                         onclick: () => {

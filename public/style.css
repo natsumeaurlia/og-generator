@@ -283,6 +283,14 @@ img {
     border-color: #ddd;
 }
 
+.text-gray {
+    color: #ddd;
+}
+
+.mb-4 {
+    margin-bottom: 1rem;
+}
+
 
 @media (max-width: 1000px) {
     .field {

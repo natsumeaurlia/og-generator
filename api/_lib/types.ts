@@ -10,4 +10,5 @@ export interface ParsedRequest {
     background?: string;
     images: string[];
     iconSize: string[];
+    fontWeight: string;
 }

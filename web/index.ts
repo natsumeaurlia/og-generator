@@ -199,8 +199,8 @@ const App = (_: any, state: AppState, setState: SetState) => {
     for (let width of widths) {
         url.searchParams.append('widths', width);
     }
-    for (let height of iconSize) {
-        url.searchParams.append('iconSize', height);
+    for (let size of iconSize) {
+        url.searchParams.append('iconSize', size);
     }
 
     return H('div',

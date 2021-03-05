@@ -177,8 +177,7 @@ const App = (_: any, state: AppState, setState: SetState) => {
         fontColor = 'black',
         text = '自動でOGを生成',
         md = true,
-        images = [],
-        widths = [],
+        images = ['logos:laravel'],
         iconSize = [],
         showToast = false,
         messageToast = '',
@@ -197,9 +196,6 @@ const App = (_: any, state: AppState, setState: SetState) => {
     url.searchParams.append('fontWeight', String(fontWeight))
     for (let image of images) {
         url.searchParams.append('images', image);
-    }
-    for (let width of widths) {
-        url.searchParams.append('widths', width);
     }
     for (let size of iconSize) {
         url.searchParams.append('iconSize', size);

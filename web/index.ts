@@ -152,7 +152,6 @@ interface AppState extends ParsedRequest {
     loading: boolean;
     showToast: boolean;
     messageToast: string;
-    widths: string[];
     iconSize: string[];
     overrideUrl: URL | null;
 }
@@ -258,7 +257,7 @@ const App = (_: any, state: AppState, setState: SetState) => {
                     label: '背景画像URL',
                     input: H(Input, {
                         value: background,
-                        oninput: (val: string) => setLoadingState({ background: val })
+                        oninput: (val: string) => setLoadingState({ background: val, overrideUrl: url })
                     })
                 }),
                 ...icons.map((icon, i) => H(Field, {
@@ -275,7 +274,7 @@ const App = (_: any, state: AppState, setState: SetState) => {
                                 }
                                 let clone = [...icons];
                                 clone[i] = val;
-                                setLoadingState({ icons: clone });
+                                setLoadingState({ icons: clone, overrideUrl: url });
                             }
                         }),
                         H('div',
@@ -287,7 +286,7 @@ const App = (_: any, state: AppState, setState: SetState) => {
                                 onchange: (val: string) => {
                                     let clone = [...iconSize];
                                     clone[i] = val;
-                                    setLoadingState({ iconSize: clone });
+                                    setLoadingState({ iconSize: clone, overrideUrl: url });
                                 }
                             })
                         ),
@@ -300,7 +299,7 @@ const App = (_: any, state: AppState, setState: SetState) => {
                                     const filter = (arr: any[]) => [...arr].filter((_, n) => n !== i);
                                     const iconsClone = filter(icons);
                                     const iconSizeClone = filter(iconSize);
-                                    setLoadingState({ icons: iconsClone, iconSize: iconSizeClone });
+                                    setLoadingState({ icons: iconsClone, iconSize: iconSizeClone, overrideUrl: url });
                                 }
                             })
                         )

@@ -101,7 +101,7 @@ function getCss(fontSize: string, background?: string, fontColor?: string, fontW
 }
 
 export function getHtml(parsedReq: ParsedRequest) {
-    const { text, md, fontSize, background, fontColor, images, iconSize, fontWeight } = parsedReq;
+    const { text, md, fontSize, background, fontColor, icons, iconSize, fontWeight } = parsedReq;
     return `<!DOCTYPE html>
 <html>
     <meta charset="utf-8">
@@ -113,7 +113,7 @@ export function getHtml(parsedReq: ParsedRequest) {
     <body>
         <div>
             <div class="logo-wrapper">
-                ${images.map((val, i) =>
+                ${icons.map((val, i) =>
                     getPlusSign(i) + getIcon(val, iconSize[i])
                 ).join('')}
             </div>

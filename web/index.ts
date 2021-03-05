@@ -177,7 +177,7 @@ const App = (_: any, state: AppState, setState: SetState) => {
         fontColor = 'black',
         text = '自動でOGを生成',
         md = true,
-        images = [],
+        icons = [],
         iconSize = [],
         showToast = false,
         messageToast = '',
@@ -194,8 +194,8 @@ const App = (_: any, state: AppState, setState: SetState) => {
     url.searchParams.append('background', background)
     url.searchParams.append('fontColor', fontColor)
     url.searchParams.append('fontWeight', String(fontWeight))
-    for (let image of images) {
-        url.searchParams.append('images', image);
+    for (let icon of icons) {
+        url.searchParams.append('icons', icon);
     }
     for (let size of iconSize) {
         url.searchParams.append('iconSize', size);
@@ -261,21 +261,21 @@ const App = (_: any, state: AppState, setState: SetState) => {
                         oninput: (val: string) => setLoadingState({ background: val })
                     })
                 }),
-                ...images.map((image, i) => H(Field, {
+                ...icons.map((icon, i) => H(Field, {
                     label: H('a',
                         { href: `https://iconify.design/icon-sets/`, target: "_blank" },
                         `Icon ${i + 1} Choose From iconify`
                     ),
                     input: H('div',
                         H(Input, {
-                            value: image,
+                            value: icon,
                             oninput: (val: string) => {
                                 if (!val.trim()) {
                                     return
                                 }
-                                let clone = [...images];
+                                let clone = [...icons];
                                 clone[i] = val;
-                                setLoadingState({ images: clone });
+                                setLoadingState({ icons: clone });
                             }
                         }),
                         H('div',
@@ -298,9 +298,9 @@ const App = (_: any, state: AppState, setState: SetState) => {
                                 onclick: (e: MouseEvent) => {
                                     e.preventDefault();
                                     const filter = (arr: any[]) => [...arr].filter((_, n) => n !== i);
-                                    const imagesClone = filter(images);
+                                    const iconsClone = filter(icons);
                                     const iconSizeClone = filter(iconSize);
-                                    setLoadingState({ images: imagesClone, iconSize: iconSizeClone });
+                                    setLoadingState({ icons: iconsClone, iconSize: iconSizeClone });
                                 }
                             })
                         )
@@ -309,13 +309,13 @@ const App = (_: any, state: AppState, setState: SetState) => {
                 H(Field, {
                     label: H('a',
                         { href: `https://iconify.design/icon-sets/`, target: "_blank" },
-                        `Icon ${images.length + 1} Choose From iconify`
+                        `Icon ${icons.length + 1} Choose From iconify`
                     ),
                     input: H(Button, {
-                        label: `Add Image ${images.length + 1}`,
+                        label: `Add Image ${icons.length + 1}`,
                         onclick: () => {
                             const nextImage = '';
-                            setState({ images: [...images, nextImage] })
+                            setState({ icons: [...icons, nextImage] })
                         }
                     }),
                 }),

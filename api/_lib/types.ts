@@ -8,7 +8,7 @@ export interface ParsedRequest {
     fontSize: string;
     fontColor? : string;
     background?: string;
-    images: string[];
+    icons: string[];
     iconSize: string[];
     fontWeight: string;
 }

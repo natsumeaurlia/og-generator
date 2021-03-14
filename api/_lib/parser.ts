@@ -5,7 +5,7 @@ import { ParsedRequest } from './types';
 export function parseRequest(req: IncomingMessage) {
     console.log('HTTP ' + req.url);
     const { pathname, query } = parse(req.url || '/', true);
-    const { fontSize, fontWeight, md, background, fontColor, icons, iconSize } = (query || {});
+    const { fontSize, fontWeight, md, background, fontColor, icons, iconSize, isHtml } = (query || {});
 
     if (Array.isArray(fontSize)) {
         throw new Error('Expected a single fontSize');
@@ -36,6 +36,7 @@ export function parseRequest(req: IncomingMessage) {
     }
 
     const parsedRequest: ParsedRequest = {
+        isHtml: Boolean(isHtml),
         fileType: extension === 'jpeg' ? extension : 'png',
         text: decodeURIComponent(text),
         md: md === '1' || md === 'true',
@@ -53,8 +54,10 @@ function getArray(stringOrArray: string[] | string | undefined): string[] {
     if (typeof stringOrArray === 'undefined') {
         return [];
     } else if (Array.isArray(stringOrArray)) {
-        return stringOrArray;
+        return stringOrArray.map((a) => {
+            return decodeURIComponent(a);
+        })
     } else {
-        return [stringOrArray];
+        return [decodeURIComponent(stringOrArray)];
     }
 }

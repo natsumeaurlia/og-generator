@@ -10,7 +10,8 @@ export default async function handler(req: IncomingMessage, res: ServerResponse)
     try {
         const parsedReq = parseRequest(req);
         const html = getHtml(parsedReq);
-        if (isHtmlDebug) {
+        const { isHtml } = parsedReq;
+        if (isHtmlDebug || isHtml) {
             res.setHeader('Content-Type', 'text/html');
             res.end(html);
             return;

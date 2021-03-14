@@ -190,11 +190,11 @@ const App = (_: any, state: AppState, setState: SetState) => {
     url.pathname = `${encodeURIComponent(text)}.${fileType}`;
     url.searchParams.append('md', mdValue);
     url.searchParams.append('fontSize', fontSize);
-    url.searchParams.append('background', background)
+    url.searchParams.append('background', encodeURIComponent(background))
     url.searchParams.append('fontColor', fontColor)
     url.searchParams.append('fontWeight', String(fontWeight))
     for (let icon of icons) {
-        url.searchParams.append('icons', icon);
+        url.searchParams.append('icons', encodeURIComponent(icon));
     }
     for (let size of iconSize) {
         url.searchParams.append('iconSize', size);
@@ -249,7 +249,7 @@ const App = (_: any, state: AppState, setState: SetState) => {
                         value: text,
                         oninput: (val: string) => {
                             console.log('oninput ' + val);
-                            setLoadingState({ text: val, overrideUrl: url });
+                            setLoadingState({ text: val });
                         }
                     })
                 }),

@@ -110,6 +110,7 @@ export function getHtml(parsedReq: ParsedRequest) {
     <style>
         ${getCss(fontSize, background, fontColor, fontWeight)}
     </style>
+    <script src="https://code.iconify.design/1/1.0.7/iconify.min.js"></script>
     <body>
         <div>
             <div class="logo-wrapper">
@@ -122,13 +123,16 @@ export function getHtml(parsedReq: ParsedRequest) {
             )}
             </div>
         </div>
-        <script src="https://code.iconify.design/1/1.0.7/iconify.min.js"></script>
     </body>
 </html>`;
 }
 
 function getIcon(iconName: string, font = '150', inline = false) {
-    return `<span class="iconify" data-icon="${iconName}" data-inline="${inline}" style="font-size:${font}"></span>`
+    const index = iconName.indexOf(':');
+    if (index !== -1) {
+        return `<span class="iconify" data-icon="${iconName}" data-inline="${inline}" style="font-size:${font}"></span>`
+    }
+    return '';
 }
 
 function getPlusSign(i: number) {

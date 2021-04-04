@@ -12,10 +12,11 @@ export async function getScreenshot(html: string, type: FileType, isDev: boolean
     const page = await getPage(isDev);
     await page.setViewport({ width: 2048, height: 1170 });
     await page.setContent(html, { timeout: 0, waitUntil: ['load', 'networkidle0'] });
-    await page.waitFor(200);
+    await page.waitFor(100);
     if (await page.$('.svg-loading')) {
-        await page.waitFor(500);
+        await page.waitFor(100);
     }
     const file = await page.screenshot({ type });
+    await page.close();
     return file;
 };

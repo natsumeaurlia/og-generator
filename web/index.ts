@@ -191,7 +191,7 @@ const App = (_: any, state: AppState, setState: SetState) => {
     url.searchParams.append('md', mdValue);
     url.searchParams.append('fontSize', fontSize);
     url.searchParams.append('background', encodeURIComponent(background))
-    url.searchParams.append('fontColor', fontColor)
+    url.searchParams.append('fontColor', encodeURIComponent(fontColor))
     url.searchParams.append('fontWeight', String(fontWeight))
     for (let icon of icons) {
         url.searchParams.append('icons', encodeURIComponent(icon));

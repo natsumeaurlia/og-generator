@@ -42,7 +42,7 @@ export function parseRequest(req: IncomingMessage) {
         md: md === '1' || md === 'true',
         fontSize: fontSize || '96px',
         background: decodeURIComponent(background),
-        fontColor: fontColor,
+        fontColor: decodeURIComponent(fontColor),
         icons: getArray(icons),
         iconSize: getArray(iconSize),
         fontWeight: fontWeight
